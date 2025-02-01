@@ -3,43 +3,133 @@ import styles from "./styles.module.css";
 import { useState } from "react";
 
 function Signup() {
-	const [otpSent, setOtpSent] = useState(false);
+  // State for form fields
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    phone: "",
+    updates: false,
+  });
 
-	const sendOtp = () => {
-		// Call AWS SNS API to send OTP
-		setOtpSent(true);
-	};
+  // Handle input change
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
-	const verifyOtp = () => {
-		// Verify OTP logic
-	};
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-	return (
-		<div className={styles.container}>
-			<h1 className={styles.heading}>Sign up Form</h1>
-			<div className={styles.form_container}>
-				<div className={styles.left}>
-					<img className={styles.img} src="./images/signup.jpg" alt="signup" />
-				</div>
-				<div className={styles.right}>
-					<h2 className={styles.from_heading}>Create Account</h2>
-					<input type="text" className={styles.input} placeholder="Username" />
-					<input type="text" className={styles.input} placeholder="Email" />
-					<input type="text" className={styles.input} placeholder="Phone" />
-					<input type="password" className={styles.input} placeholder="Password" />
-					{otpSent ? (
-						<input type="text" className={styles.input} placeholder="Enter OTP" />
-					) : (
-						<button className={styles.btn} onClick={sendOtp}>Send OTP</button>
-					)}
-					{otpSent && <button className={styles.btn} onClick={verifyOtp}>Verify OTP</button>}
-					<p className={styles.text}>
-						Already Have Account ? <Link to="/login">Log In</Link>
-					</p>
-				</div>
-			</div>
-		</div>
-	);
+    try {
+      const response = await fetch("/api/v1/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("Account created successfully!");
+      } else {
+        alert(result.message || "Error during signup.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error while sending the request.");
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Sign up Form</h1>
+      <div className={styles.form_container}>
+        <div className={styles.left}>
+          <img className={styles.img} src="./images/signup.jpg" alt="signup" />
+        </div>
+        <div className={styles.right}>
+          <h2 className={styles.from_heading}>Create Account</h2>
+          
+          {/* Username Field */}
+          <input
+            type="text"
+            className={styles.input}
+            placeholder="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+          
+          {/* Email Field */}
+          <input
+            type="text"
+            className={styles.input}
+            placeholder="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          
+          {/* Password Field */}
+          <input
+            type="password"
+            className={styles.input}
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          
+          {/* Phone Field */}
+          <input
+            type="text"
+            className={styles.input}
+            placeholder="Phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          
+          {/* Checkbox for Updates */}
+          <div className={styles.checkbox_container}>
+            <input
+              type="checkbox"
+              id="updates"
+              className={styles.checkbox}
+              name="updates"
+              checked={formData.updates}
+              onChange={handleChange}
+            />
+            <label htmlFor="updates" className={styles.checkbox_label}>
+              Send me important updates via SMS, Email, and WhatsApp
+            </label>
+          </div>
+
+          {/* Terms & Conditions */}
+          <p className={styles.terms}>
+            By clicking Register, you agree to the <Link to="/terms">Terms and Conditions</Link> & <Link to="/privacy">Privacy Policy</Link>.
+          </p>
+          
+          {/* Register Now Button */}
+          <button className={styles.btn} onClick={handleSubmit}>
+            Register Now
+          </button>
+
+          {/* Already Have an Account? */}
+          <p className={styles.text}>
+            Already Have an Account? <Link to="/login">Log In</Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Signup;

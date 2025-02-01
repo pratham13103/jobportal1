@@ -23,7 +23,7 @@
     display: flex;
     margin-top: 45px;
     width: 800px;
-    height: 450px;
+    height: 500px;
     background-color: white;
     box-shadow: 3px 4px 36px -6px rgba(0,0,0,0.4);
     border-radius: 50px;
@@ -70,17 +70,20 @@
     font-size: 13px;
 }
 
+/* Oval Button */
 .btn {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
-    padding: 12px 25px;
+    padding: 10px 40px;  /* Adjusted padding for oval shape */
     color: white;
     background-color: #ffc801;
-    border-radius: 12px;
+    border-radius: 50px;  /* Makes the button oval */
     margin: 10px 0 0 0;
     outline: none;
     border: none;
     cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    width: 320px;  /* Removed fixed width to allow for natural oval shape */
 }
 
 .text {
@@ -123,4 +126,44 @@
 
 .google_btn > span{
     margin-left: 10px;
+}
+
+/* Checkbox Container */
+.checkbox_container {
+    display: flex;
+    align-items: center;
+    width: 320px;
+    margin: 8px 0;
+}
+
+/* Checkbox */
+.checkbox {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+/* Checkbox Label */
+.checkbox_label {
+    font-size: 14px;
+    color: #2c444e;
+}
+
+/* Terms & Conditions */
+.terms {
+    font-size: 12px;
+    color: #2c444e;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.terms a {
+    color: #ffc801;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.terms a:hover {
+    text-decoration: underline;
 }
