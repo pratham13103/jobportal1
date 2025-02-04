@@ -70,6 +70,26 @@
     font-size: 13px;
 }
 
+/* Password Input Container */
+.password_container {
+    position: relative;
+}
+
+/* Eye Icon for Password Visibility Toggle */
+.eye_icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #2c444e;
+}
+
+.eye_icon:hover {
+    color: #ffc801;
+}
+
 /* Oval Button */
 .btn {
     font-size: 16px;

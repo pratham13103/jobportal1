@@ -11,6 +11,15 @@ function Signup() {
     phone: "",
     updates: false,
   });
+  
+  const [showPassword, setShowPassword] = useState(false);
+  // State for password input
+  const [password, setPassword] = useState("");
+
+  // Function to toggle password visibility
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   // Handle input change
   const handleChange = (e) => {
@@ -26,7 +35,7 @@ function Signup() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/v1/signup", {
+      const response = await fetch("http://localhost:8080/api/v1/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,15 +86,23 @@ function Signup() {
             onChange={handleChange}
           />
           
-          {/* Password Field */}
-          <input
-            type="password"
-            className={styles.input}
-            placeholder="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
+          {/* Password Input with Show/Hide Toggle */}
+            <div className={styles.password_container}>
+              <input
+                type={showPassword ? "text" : "password"}
+                className={styles.input}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // Update password state
+              />
+              <span
+                className={styles.eye_icon}
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? "👁️" : "👁️‍🗨️"}
+              </span>
+          </div>
+          
           
           {/* Phone Field */}
           <input

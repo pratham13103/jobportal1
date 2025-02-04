@@ -40,9 +40,8 @@ app.use(
 app.use(express.json()); // Important for OTP API request handling
 
 // Routes
-app.use("/auth", authRoute);
 app.use("/otp", otpRoute); // Add OTP route
-app.use("/api/v1", authRoute);
+app.use("/api/v1/auth", authRoute);
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

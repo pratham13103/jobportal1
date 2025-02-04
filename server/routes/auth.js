@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const pool = require("../db"); // Import the database connection
+const bcrypt = require("bcrypt");
 
 // Temporary in-memory store for users
 let users = [];
@@ -63,7 +64,7 @@ router.post("/login", async (req, res) => {
 
 
 // Google Authentication
-router.get("/google", passport.authenticate("google", ["profile", "email"]));
+router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 router.get(
   "/google/callback",

@@ -1,23 +1,25 @@
 import { useState } from "react"; 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import styles from "./styles.module.css";
 
-function Login() {
+function Login({ setUser }) {  // ✅ Accept setUser as a prop
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState("");  // For email input
-    const [password, setPassword] = useState("");  // For password input
-    const [error, setError] = useState(""); // For error handling
+    const [email, setEmail] = useState("");  
+    const [password, setPassword] = useState("");  
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(""); 
+    const navigate = useNavigate(); 
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
 
     const googleAuth = () => {
-        window.open(
-            `${process.env.REACT_APP_API_URL}/auth/google/callback`,
-            "_self"
-        );
+        // Redirect to the Google authentication route
+        window.location.href = "http://localhost:8080/api/v1/auth/google";
     };
+    
+    
 
     const linkedinAuth = () => {
         window.open(
@@ -27,23 +29,24 @@ function Login() {
     };
 
     const handleLogin = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault(); 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+            const response = await fetch("http://localhost:8080/api/v1/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password }), // Send email and password to the backend
+                body: JSON.stringify({ email, password }), 
             });
 
             const data = await response.json();
-            
+
             if (response.ok) {
-                // Handle successful login, e.g., redirect to dashboard or store user info
-                console.log("Login successful:", data);
+                localStorage.setItem("user", JSON.stringify(data.user)); 
+                setUser(data.user); // ✅ Update user state
+                navigate("/home"); 
             } else {
-                setError(data.message);  // Show error message if login fails
+                setError(data.message);
             }
         } catch (error) {
             console.error("Login error:", error);
@@ -79,7 +82,7 @@ function Login() {
                             className={styles.input}
                             placeholder="Password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)} // Update password state
+                            onChange={(e) => setPassword(e.target.value)} 
                         />
                         <span
                             className={styles.eye_icon}
@@ -103,9 +106,19 @@ function Login() {
                     <p className={styles.text}>or</p>
 
                     {/* Google Login Button */}
-                    <button className={styles.google_btn} onClick={googleAuth}>
-                        <img src="./images/google.png" alt="Google icon" />
-                        <span>Sign in with Google</span>
+                    <button
+                        className={`${styles.google_btn} ${loading ? styles.loading : ''}`}
+                        onClick={googleAuth}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <span className={styles.loadingText}>Signing you in...</span>
+                        ) : (
+                        <>
+                             <img src="./images/google.png" alt="Google icon" className={styles.googleIcon} />
+                             <span>Sign in with Google</span>
+                        </>
+                        )}
                     </button>
 
                     {/* LinkedIn Login Button */}
